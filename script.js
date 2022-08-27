@@ -33,10 +33,19 @@ function disable(buttons, condition) {
 	});
 }
 
+function updateDisplay(result) {
+	if (result) display.textContent = String(result).substring(0, 7);
+	else {
+		let length = currentNumber.length;
+		display.textContent = currentNumber.substring(length - 7, length);
+	}
+}
+
 function addNumber(e) {
+	if (numbers[0] && !operator) clear();
 	let newNumber = e.target.id;
 	currentNumber += newNumber;
-	display.textContent += newNumber;
+	updateDisplay();
 	disable([...operatorButtons, equalsButton], false);
 }
 
@@ -47,8 +56,8 @@ function addOperator(e) {
 		currentNumber = "";
 	}
 	operator = e.target.id;
-	display.textContent += operator;
 	disable([...operatorButtons, equalsButton], true);
+	disable([...numberButtons], false);
 }
 
 function equals() {
@@ -58,14 +67,14 @@ function equals() {
 	let result = operate(numbers[0], numbers[1], operator);
 	numbers = [result];
 	operator = "";
-	display.textContent = String(result).substring(0, 7);
+	updateDisplay(result);
 }
 
 function clear() {
 	currentNumber = "";
 	numbers = [];
 	operator = "";
-	display.textContent = "";
+	updateDisplay();
 	disable([...operatorButtons, equalsButton], true);
 }
 
