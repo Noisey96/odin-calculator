@@ -34,19 +34,22 @@ function disable(buttons, condition) {
 }
 
 function updateDisplay(result) {
+	if (Number.isNaN(result)) result = "NaN";
 	if (result) display.textContent = String(result).substring(0, 7);
 	else {
 		let length = currentNumber.length;
 		display.textContent = currentNumber.substring(length - 7, length);
 	}
+	if (!display.textContent) display.textContent = 0;
 }
 
 function addNumber(e) {
-	if (numbers[0] && !operator) clear();
+	if (numbers.length === 1 && !operator) clear();
 	let newNumber = e.target.id;
 	currentNumber += newNumber;
 	updateDisplay();
 	disable([...operatorButtons, equalsButton], false);
+	if (currentNumber.includes(".")) disable([decimalButton], true);
 }
 
 function addOperator(e) {
@@ -57,7 +60,7 @@ function addOperator(e) {
 	}
 	operator = e.target.id;
 	disable([...operatorButtons, equalsButton], true);
-	disable([...numberButtons], false);
+	disable([decimalButton], false);
 }
 
 function equals() {
@@ -75,16 +78,18 @@ function clear() {
 	numbers = [];
 	operator = "";
 	updateDisplay();
+	disable([decimalButton], false);
 	disable([...operatorButtons, equalsButton], true);
 }
 
 let currentNumber = "";
-let numbers = [];
+let numbers = [""];
 let operator;
 
 let display = document.querySelector("#display");
 let operatorButtons = document.querySelectorAll(".operator");
 let numberButtons = document.querySelectorAll(".number");
+let decimalButton = document.querySelector(".decimal");
 let equalsButton = document.querySelector(".equals");
 let clearButton = document.querySelector(".clear");
 
