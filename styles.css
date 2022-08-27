@@ -63,6 +63,10 @@ button {
     background-color: lightskyblue;
 }
 
+.operator:focus {
+    background-color: rgb(0, 157, 255);
+}
+
 .equals {
     background-color: rgb(0, 238, 0);
 }

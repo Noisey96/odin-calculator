@@ -27,14 +27,17 @@ function operate(x, y, op) {
 	}
 }
 
+function disable(buttons, condition) {
+	buttons.forEach((button) => {
+		button.disabled = condition;
+	});
+}
+
 function addNumber(e) {
 	let newNumber = e.target.id;
 	currentNumber += newNumber;
 	display.textContent += newNumber;
-	operatorButtons.forEach((button) => {
-		button.disabled = false;
-	});
-	equalsButton.disabled = false;
+	disable([...operatorButtons, equalsButton], false);
 }
 
 function addOperator(e) {
@@ -45,10 +48,7 @@ function addOperator(e) {
 	}
 	operator = e.target.id;
 	display.textContent += operator;
-	operatorButtons.forEach((button) => {
-		button.disabled = true;
-	});
-	equalsButton.disabled = true;
+	disable([...operatorButtons, equalsButton], true);
 }
 
 function equals() {
@@ -66,6 +66,7 @@ function clear() {
 	numbers = [];
 	operator = "";
 	display.textContent = "";
+	disable([...operatorButtons, equalsButton], true);
 }
 
 let currentNumber = "";
