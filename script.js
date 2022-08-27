@@ -35,10 +35,12 @@ function disable(buttons, condition) {
 
 function updateDisplay(result) {
 	if (Number.isNaN(result)) result = "NaN";
-	if (result) display.textContent = String(result).substring(0, 7);
+	if (result) {
+		display.textContent = (result > 999999999 || result < 0.000001) ? result.toExponential(3) : String(result).substring(0, 9);
+	}
 	else {
 		let length = currentNumber.length;
-		display.textContent = currentNumber.substring(length - 7, length);
+		display.textContent = currentNumber.substring(length - 9, length);
 	}
 	if (!display.textContent) display.textContent = 0;
 }
