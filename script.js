@@ -58,7 +58,7 @@ function equals() {
 	let result = operate(numbers[0], numbers[1], operator);
 	numbers = [result];
 	operator = "";
-	display.textContent = String(result).substring(0, 9);
+	display.textContent = String(result).substring(0, 7);
 }
 
 function clear() {
