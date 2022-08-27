@@ -36,7 +36,8 @@ function disable(buttons, condition) {
 function updateDisplay(result) {
 	if (Number.isNaN(result)) result = "NaN";
 	if (result) {
-		display.textContent = (result > 999999999 || result < 0.000001) ? result.toExponential(3) : String(result).substring(0, 9);
+		let makeExponential = Math.abs(result) > 99999999 || Math.abs(result) < 0.000001;
+		display.textContent = makeExponential ? result.toExponential(3) : String(result).substring(0, 9);
 	}
 	else {
 		let length = currentNumber.length;
@@ -73,6 +74,7 @@ function equals() {
 	numbers = [result];
 	operator = "";
 	updateDisplay(result);
+	disable([decimalButton], false);
 }
 
 function clear() {
