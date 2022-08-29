@@ -47,33 +47,45 @@ function updateDisplay(result) {
 }
 
 function addNumber(e) {
+	// if the number is added directly after it found a result, reset the calculator
 	if (numbers.length === 1 && !operator) clear();
+
 	let newNumber = e.target.id;
 	currentNumber += newNumber;
+
 	updateDisplay();
+
 	disable([...operatorButtons, equalsButton], false);
 	if (currentNumber.includes(".")) disable([decimalButton], true);
 }
 
 function addOperator(e) {
+	// if the operator is added before a result is calculated, calculate a result
 	if (operator) equals();
+
 	if (!numbers.length) {
 		numbers.push(Number(currentNumber));
 		currentNumber = "";
 	}
 	operator = e.target.id;
+
 	disable([...operatorButtons, equalsButton], true);
 	disable([decimalButton], false);
 }
 
 function equals() {
 	if (!operator) return;
+
 	numbers.push(Number(currentNumber));
 	currentNumber = "";
+
 	let result = operate(numbers[0], numbers[1], operator);
+
 	numbers = [result];
 	operator = "";
+
 	updateDisplay(result);
+
 	disable([decimalButton], false);
 }
 
@@ -81,13 +93,15 @@ function clear() {
 	currentNumber = "";
 	numbers = [];
 	operator = "";
+
 	updateDisplay();
+
 	disable([decimalButton], false);
 	disable([...operatorButtons, equalsButton], true);
 }
 
 let currentNumber = "";
-let numbers = [""];
+let numbers = [];
 let operator;
 
 let display = document.querySelector("#display");
