@@ -1,3 +1,14 @@
+const display = document.querySelector('#display');
+const operatorButtons = document.querySelectorAll('.operator');
+const numberButtons = document.querySelectorAll('.number');
+const decimalButton = document.querySelector('.decimal');
+const equalsButton = document.querySelector('.equals');
+const clearButton = document.querySelector('.clear');
+
+let currentNumber = '';
+let numbers = [];
+let operator;
+
 function add(x, y) {
 	return x + y;
 }
@@ -11,52 +22,78 @@ function multiply(x, y) {
 }
 
 function divide(x, y) {
-	return y === 0 ? "NaN" : x / y;
+	return y === 0 ? 'NaN' : x / y;
 }
 
 function operate(x, y, op) {
 	switch (op) {
-		case "+":
+		case '+':
 			return add(x, y);
-		case "-":
+		case '-':
 			return subtract(x, y);
-		case "*":
+		case '*':
 			return multiply(x, y);
-		case "/":
+		default:
 			return divide(x, y);
 	}
 }
 
 function disable(buttons, condition) {
 	buttons.forEach((button) => {
-		button.disabled = condition;
+		button.setAttribute('disabled', condition);
 	});
 }
 
 function updateDisplay(result) {
-	if (Number.isNaN(result)) result = "NaN";
-	if (result) {
-		let makeExponential = Math.abs(result) > 99999999 || Math.abs(result) < 0.000001;
-		display.textContent = makeExponential ? result.toExponential(3) : String(result).substring(0, 9);
-	}
-	else {
-		let length = currentNumber.length;
+	if (Number.isNaN(result)) display.textContent = 'NaN';
+	else if (result) {
+		const makeExp = Math.abs(result) > 99999999 || Math.abs(result) < 0.000001;
+		display.textContent = makeExp ? result.toExponential(3) : String(result).substring(0, 9);
+	} else {
+		const { length } = currentNumber;
 		display.textContent = currentNumber.substring(length - 9, length);
 	}
 	if (!display.textContent) display.textContent = 0;
+}
+
+function equals() {
+	if (!operator) return;
+
+	numbers.push(Number(currentNumber));
+	currentNumber = '';
+
+	const result = operate(numbers[0], numbers[1], operator);
+
+	numbers = [result];
+	operator = '';
+
+	updateDisplay(result);
+
+	disable([decimalButton], false);
+}
+
+function clear() {
+	currentNumber = '';
+	numbers = [];
+	operator = '';
+
+	updateDisplay();
+
+	disable([decimalButton], false);
+	disable([...operatorButtons, equalsButton], true);
 }
 
 function addNumber(e) {
 	// if the number is added directly after it found a result, reset the calculator
 	if (numbers.length === 1 && !operator) clear();
 
-	let newNumber = e.target.id;
+	const newNumber = e.target.id;
 	currentNumber += newNumber;
 
 	updateDisplay();
 
 	disable([...operatorButtons, equalsButton], false);
-	if (currentNumber.includes(".")) disable([decimalButton], true);
+	if (currentNumber.includes('.')) disable([decimalButton], true);
 }
 
 function addOperator(e) {
@@ -65,7 +102,7 @@ function addOperator(e) {
 
 	if (!numbers.length) {
 		numbers.push(Number(currentNumber));
-		currentNumber = "";
+		currentNumber = '';
 	}
 	operator = e.target.id;
 
@@ -73,49 +110,11 @@ function addOperator(e) {
 	disable([decimalButton], false);
 }
 
-function equals() {
-	if (!operator) return;
-
-	numbers.push(Number(currentNumber));
-	currentNumber = "";
-
-	let result = operate(numbers[0], numbers[1], operator);
-
-	numbers = [result];
-	operator = "";
-
-	updateDisplay(result);
-
-	disable([decimalButton], false);
-}
-
-function clear() {
-	currentNumber = "";
-	numbers = [];
-	operator = "";
-
-	updateDisplay();
-
-	disable([decimalButton], false);
-	disable([...operatorButtons, equalsButton], true);
-}
-
-let currentNumber = "";
-let numbers = [];
-let operator;
-
-let display = document.querySelector("#display");
-let operatorButtons = document.querySelectorAll(".operator");
-let numberButtons = document.querySelectorAll(".number");
-let decimalButton = document.querySelector(".decimal");
-let equalsButton = document.querySelector(".equals");
-let clearButton = document.querySelector(".clear");
-
 numberButtons.forEach((button) => {
-	button.addEventListener("click", (e) => addNumber(e));
+	button.addEventListener('click', (e) => addNumber(e));
 });
 operatorButtons.forEach((button) => {
-	button.addEventListener("click", (e) => addOperator(e));
+	button.addEventListener('click', (e) => addOperator(e));
 });
-equalsButton.addEventListener("click", (_) => equals());
-clearButton.addEventListener("click", (_) => clear());
+equalsButton.addEventListener('click', () => equals());
+clearButton.addEventListener('click', () => clear());
