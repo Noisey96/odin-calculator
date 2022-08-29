@@ -40,7 +40,7 @@ function operate(x, y, op) {
 
 function disable(buttons, condition) {
 	buttons.forEach((button) => {
-		button.setAttribute('disabled', condition);
+		button.disabled = condition;
 	});
 }
 
